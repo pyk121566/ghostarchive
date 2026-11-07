@@ -1,0 +1,27 @@
+# Maven
+target/
+
+# Eclipse / STS
+.metadata/
+.settings/
+.classpath
+.project
+.springBeans
+.sts4-cache/
+
+# IntelliJ
+.idea/
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Local DB credentials
+src/main/resources/db.properties
+
+# Local database configuration
+/src/main/resources/db.properties

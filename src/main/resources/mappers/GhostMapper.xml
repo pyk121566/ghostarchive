@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.ghostarchive.mapper.GhostMapper">
+
+<!-- 전체 괴담 목록 조회 -->
+	<select id="findAll" resultType="GhostDTO">
+		SELECT GHOST_ID, TITLE, CONTENT, AUTHOR, CREATED_AT
+		FROM TB_GHOST
+		ORDER BY GHOST_ID DESC
+	</select>
+	
+	<!-- 특정 괴담 상세 조회 -->
+	<select id="findById" parameterType="int" resultType="GhostDTO">
+		SELECT GHOST_ID, TITLE, CONTENT, AUTHOR, CREATED_AT
+		FROM TB_GHOST
+		WHERE GHOST_ID = #{ghostId}
+	</select>
+
+	<!--괴담 등록  -->
+	<insert id="insert" parameterType="GhostDTO">
+		INSERT INTO TB_GHOST(TITLE, CONTENT, AUTHOR)
+		VALUES(#{title}, #{content}, #{author})
+	</insert>
+	
+	<!-- 괴담 수정 -->
+	<update id="update" parameterType="GhostDTO">
+		UPDATE TB_GHOST 
+		SET TITLE=#{title}, CONTENT=#{content}, AUTHOR=#{author}
+		WHERE GHOST_ID = #{ghostId}
+	</update>
+	
+</mapper>

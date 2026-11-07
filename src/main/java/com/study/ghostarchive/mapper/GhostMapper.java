@@ -1,0 +1,26 @@
+package com.study.ghostarchive.mapper;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.study.ghostarchive.dto.GhostDTO;
+
+@Mapper
+//Mybatis 에서 Mapper는 java 메서드와 SQL 문을 연결하는 역할을 함
+public interface GhostMapper {
+
+		//전체 괴담 목록 조회
+	List<GhostDTO> findAll();
+	
+		//괴담 한 개 조회
+	GhostDTO findById(int ghostId);
+	
+		//괴담 등록
+	int insert(GhostDTO ghost);
+	
+		//괴담 수정
+	int update(GhostDTO ghost);
+	
+	
+	}
