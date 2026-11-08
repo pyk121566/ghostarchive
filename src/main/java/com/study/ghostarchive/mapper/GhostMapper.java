@@ -22,5 +22,7 @@ public interface GhostMapper {
 		//괴담 수정
 	int update(GhostDTO ghost);
 	
+		//괴담 삭제
+	int delete(int ghostId);
 	
 	}

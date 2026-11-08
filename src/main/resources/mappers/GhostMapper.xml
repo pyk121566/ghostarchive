@@ -29,4 +29,10 @@
 		WHERE GHOST_ID = #{ghostId}
 	</update>
 	
+	<!--괴담 삭제 -->
+	<delete id="delete" parameterType="int">
+		DELETE FROM TB_GHOST
+		WHERE GHOST_ID=#{ghostId}
+	</delete>
+	
 </mapper>

@@ -77,7 +77,7 @@ public class GhostController {
 		}
 		
 		//괴담 수정 폼 보여주기
-		@GetMapping("/ghost/{ghostId}/edit")
+		@GetMapping("/ghosts/{ghostId}/edit")
 		public String getEditForm(@PathVariable("ghostId") int ghostId, Model model) {
 			
 			//기존 괴담 정보 조회
@@ -105,6 +105,17 @@ public class GhostController {
 			
 			//수정한 괴담의 상세 페이지로 이동
 			return "redirect:/ghosts/" + ghostId;
+		}
+		
+		//괴담 삭제 처리
+		@PostMapping("/ghosts/{ghostId}/delete")
+		public String deleteGhost(@PathVariable("ghostId") int ghostId) {
+			
+			//Service 룰 통해 괴담 삭제
+			ghostService.delete(ghostId);
+			
+			//삭제 후 목록 페이지로 이동
+			return "redirect:/ghosts";
 		}
 
 

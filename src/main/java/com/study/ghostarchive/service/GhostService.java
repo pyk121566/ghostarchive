@@ -36,4 +36,9 @@ public class GhostService {
 	public int update(GhostDTO ghost) {
 		return ghostMapper.update(ghost);
 	}
+	
+	//괴담 삭제
+	public int delete(int ghostId) {
+		return ghostMapper.delete(ghostId);
+	}
 }
