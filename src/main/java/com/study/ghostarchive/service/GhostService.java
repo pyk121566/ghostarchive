@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.study.ghostarchive.common.web.Pager;
 import com.study.ghostarchive.dto.GhostDTO;
 import com.study.ghostarchive.mapper.GhostMapper;
 
@@ -40,5 +41,20 @@ public class GhostService {
 	//괴담 삭제
 	public int delete(int ghostId) {
 		return ghostMapper.delete(ghostId);
+	}
+	
+	//괴담 검색
+	public List<GhostDTO> searchByTitle(String keyword){
+		return ghostMapper.searchByTitle(keyword);
+	}
+	
+	//전체 괴담 개수 조회
+	public int count() {
+		return ghostMapper.count();
+	}
+	
+	//페이징된 괴담 목록 조회
+	public List<GhostDTO> selectByPage(Pager pager){
+		return ghostMapper.selectByPage(pager);
 	}
 }

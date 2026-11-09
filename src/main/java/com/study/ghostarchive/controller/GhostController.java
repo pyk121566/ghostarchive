@@ -2,13 +2,17 @@ package com.study.ghostarchive.controller;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.study.ghostarchive.common.web.Pager;
 import com.study.ghostarchive.dto.GhostDTO;
 import com.study.ghostarchive.service.GhostService;
 
@@ -22,19 +26,53 @@ public class GhostController {
 		this.ghostService = ghostService;
 	}
 	
-	//전체 괴담 목록 조회
+	//전체 괴담 목록 조회 + 제목 검색 + 페이징
 	@GetMapping("/ghosts")		//브라우저에서 /ghost 주소로 GET 요청이 들어오면 아래의 list() 메서드를 실행하도록 연결
-	public String getGhostList(Model model) {	//model은 Controller 에서 JSP 로 데이터를 전달할 때 사용하는 객체
-
-		//Service 를 통해 괴담 목록 조회
-		List<GhostDTO> ghostList = ghostService.findAll();
+	public String getGhostList(@RequestParam(value = "keyword", required=false)String keyword, 
+				HttpServletRequest request ,Model model) {
 		
-		//JSP에 데이터 전달
+		//1.Pager 객체 생성
+		Pager pager= new Pager();
+		
+		List<GhostDTO> ghostList;
+		
+		if(keyword == null || keyword.trim().isEmpty()) {
+			
+			//2. 전체 괴담 개수 설정
+			pager.setTotalCount(ghostService.count());
+			
+			//3.페이지 정보 계산
+			pager.init(request);
+			
+			//4.현재 페이지에 해당하는 괴담 조회
+			ghostList = ghostService.selectByPage(pager);
+			
+		}else {
+		
+			//검색 기능은 기존 방식 유지
+			List<GhostDTO> searchList=ghostService.searchByTitle(keyword.trim());
+			
+			pager.setTotalCount(searchList.size());
+			pager.init(request);
+			
+			int start = Math.min(pager.getOffset(), searchList.size());
+			int end = Math.min(start + pager.getPageSize(), searchList.size());
+			
+			ghostList = searchList.subList(start, end);
+		}
+		
+		//5.Pager 에 목록 저장
+		pager.setList(ghostList);
+		
+		//6.JSP에 데이터 전달
 		model.addAttribute("ghostList",ghostList);
+		model.addAttribute("pager", pager);
+		model.addAttribute("keyword",keyword);
 		
 		return "/ghost/list";
+		
+
 	}
-	
 		//특정 괴담 상세 조회
 		@GetMapping("/ghosts/{ghostId}")
 		public String getGhostDetail(@PathVariable("ghostId") int ghostId, Model model) {
@@ -117,6 +155,9 @@ public class GhostController {
 			//삭제 후 목록 페이지로 이동
 			return "redirect:/ghosts";
 		}
+		
+		
+		
 
 
 	}
