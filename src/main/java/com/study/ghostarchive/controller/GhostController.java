@@ -84,14 +84,19 @@ public class GhostController {
 			if(ghost == null) {
 				return "redirect:/ghosts";
 			}
+			
+			//조회수 1 증가
+			ghostService.increaseHit(ghostId);	
 		
-			//JSP에 괴담 한 개 전달
+			//증가된 조회수 반영
+			ghost.setHit(ghost.getHit()+1);
+			
+			//JSP에 전달
 			model.addAttribute("ghost", ghost);
 			
-			// 상세 페이지로 이동
 			return "/ghost/detail";
-	}
-		
+		}
+			
 		//괴담 등록 폼 보여주기
 		@GetMapping("/ghosts/new")
 		public String getGhostForm() {

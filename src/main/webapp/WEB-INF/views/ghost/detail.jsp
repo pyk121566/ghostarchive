@@ -43,6 +43,11 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				<td>작성일</td>
 				<td><%=sdf.format(ghost.getCreatedAt())%></td>
 			</tr>
+			
+			<tr>
+				<th>조회수</th>
+				<td><%=ghost.getHit() %></td>
+			</tr>
 
 			<tr>
 				<td>괴담 내용</td>

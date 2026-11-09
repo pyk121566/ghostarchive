@@ -55,6 +55,7 @@ Pager pager = (Pager) request.getAttribute("pager");
 					<th>제목</th>
 					<th>작성자</th>
 					<th>작성일</th>
+					<th>조회수</th>
 				</tr>
 			</thead>
 
@@ -65,7 +66,7 @@ Pager pager = (Pager) request.getAttribute("pager");
 				%>
 
 				<tr>
-					<td colspan="4" class="text-center">
+					<td colspan="5" class="text-center">
 						<%
 						if (keyword != null && !keyword.trim().isEmpty()) {
 						%> 검색 결과가 없습니다 <%
@@ -90,6 +91,7 @@ Pager pager = (Pager) request.getAttribute("pager");
 					</a></td>
 					<td><%=ghost.getAuthor()%></td>
 					<td><%=sdf.format(ghost.getCreatedAt())%></td>
+					<td><%=ghost.getHit()%></td>
 				</tr>
 				<%
 				}

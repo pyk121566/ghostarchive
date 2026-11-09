@@ -57,4 +57,9 @@ public class GhostService {
 	public List<GhostDTO> selectByPage(Pager pager){
 		return ghostMapper.selectByPage(pager);
 	}
+	
+	//괴담 조회수 증가
+	public int increaseHit(int ghostId) {
+		return ghostMapper.increaseHit(ghostId);
+	}
 }

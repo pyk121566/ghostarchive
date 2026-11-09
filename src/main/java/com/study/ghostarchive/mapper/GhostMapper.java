@@ -35,4 +35,7 @@ public interface GhostMapper {
 		//페이징된 괴담 목록 조회
 	List<GhostDTO> selectByPage(Pager pager);
 	
+		//괴담 조회수 1증가
+	int increaseHit (int ghostId);
+	
 	}
