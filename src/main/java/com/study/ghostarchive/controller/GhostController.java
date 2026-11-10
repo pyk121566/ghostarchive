@@ -13,17 +13,22 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.study.ghostarchive.common.web.Pager;
+import com.study.ghostarchive.dto.GhostCommentDTO;
 import com.study.ghostarchive.dto.GhostDTO;
+import com.study.ghostarchive.service.GhostCommentService;
 import com.study.ghostarchive.service.GhostService;
 
 @Controller	//이 클래스가 웹요청을 처리하는 Controller 라는 사실을 알려줌
 public class GhostController {
 	
 	private final GhostService ghostService;	//컨트롤러에서 GhostDAO를 사용하기위해 멤버변수로 선언
+	private final GhostCommentService ghostCommentService;
 	
 	//생성자를 통한 의존성 주입
-	public GhostController(GhostService ghostService) {
+	public GhostController(GhostService ghostService, 
+									GhostCommentService ghostCommentService) {
 		this.ghostService = ghostService;
+		this.ghostCommentService=ghostCommentService;
 	}
 	
 	//전체 괴담 목록 조회 + 제목 검색 + 페이징
@@ -94,6 +99,12 @@ public class GhostController {
 			//JSP에 전달
 			model.addAttribute("ghost", ghost);
 			
+			// 해당 괴담의 댓글 조회
+			List<GhostCommentDTO> commentList = ghostCommentService.findByGhostId(ghostId);
+			
+			//JSP에 댓글 목록 전달
+			model.addAttribute("commentList",commentList);
+			
 			return "/ghost/detail";
 		}
 			
@@ -161,8 +172,39 @@ public class GhostController {
 			return "redirect:/ghosts";
 		}
 		
+		//댓글 등록
+		@PostMapping("/ghosts/{ghostId}/comments")
+		public String registComment(@PathVariable("ghostId") int ghostId, 
+													@ModelAttribute GhostCommentDTO comment) {
+			comment.setGhostId(ghostId);
+			ghostCommentService.regist(comment);
+			
+			return "redirect:/ghosts/" + ghostId;
+		}
 		
-		
+		//댓글 삭제
+		@PostMapping("/ghosts/{ghostId}/comments/{commentId}/delete")
+		public String deleteComment(@PathVariable("ghostId") int ghostId,
+												@PathVariable("commentId") int commentId) {
+			ghostCommentService.delete(commentId);
+			
+			return "redirect:/ghosts/"+ghostId;
+		}
 
-
+		//댓글 수정
+		@PostMapping("/ghosts/{ghostId}/comments/{commentId}/edit")
+		public String updateComment(
+				@PathVariable("ghostId") int ghostId,
+				@PathVariable("commentId") int commentId,
+				@RequestParam("content") String content) {
+			
+			GhostCommentDTO comment = new GhostCommentDTO();
+			
+			comment.setCommentId(commentId);
+			comment.setContent(content);
+			
+			ghostCommentService.update(comment);
+			
+			return "redirect:/ghosts/" + ghostId;
+		}
 	}

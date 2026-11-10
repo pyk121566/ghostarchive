@@ -11,6 +11,7 @@
   	
   	<typeAliases>
   		<typeAlias type="com.study.ghostarchive.dto.GhostDTO"		alias="GhostDTO"/>
+  		<typeAlias type="com.study.ghostarchive.dto.GhostCommentDTO"		alias="GhostCommentDTO"/>
   		<typeAlias type="com.study.ghostarchive.common.web.Pager"		alias="Pager"/>
   	</typeAliases>
   	
