@@ -1,3 +1,4 @@
+<%@page import="org.springframework.web.util.HtmlUtils"%>
 <%@page import="java.util.List"%>
 <%@page import="com.study.ghostarchive.dto.GhostCommentDTO"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -29,7 +30,7 @@ List<GhostCommentDTO> commentList = (List<GhostCommentDTO>) request.getAttribute
 <body>
 	<div class="container">
 		<h2>👻 괴담 아카이브 👻</h2>
-		<h3><%=ghost.getTitle()%></h3>
+		<h3><%=HtmlUtils.htmlEscape(ghost.getTitle())%></h3>
 
 		<table class="table table-bordered">
 			<tr>
@@ -54,13 +55,29 @@ List<GhostCommentDTO> commentList = (List<GhostCommentDTO>) request.getAttribute
 
 			<tr>
 				<td>괴담 내용</td>
-				<td><%=ghost.getContent()%></td>
+				<td><%=HtmlUtils.htmlEscape(ghost.getContent())%></td>
 			</tr>
 		</table>
 
 		<!-- 댓글 목록 -->
 		<h3 style="margin-top: 35px; margin-bottom: 20px;">💬 댓글</h3>
+		
+		<% if(request.getAttribute("errorMessage") !=null) { %>
+		
+			<div class="alert alert-danger">
+				<%=request.getAttribute("errorMessage") %>
+			</div>
+		
+		<%} %>
+		
+		<% if(request.getAttribute("successMessage") != null) { %>
+		
+			<div class="alert alert-success">
+				<%=request.getAttribute("successMessage") %>
+			</div>
 
+			<%} %>
+			
 		<%
 		if (commentList == null || commentList.isEmpty()) {
 		%>
@@ -78,8 +95,8 @@ List<GhostCommentDTO> commentList = (List<GhostCommentDTO>) request.getAttribute
 		<div class="panel panel-default">
 			<div class="pannel-body">
 
-				<strong><%=comment.getAuthor()%></strong>
-				<p><%=comment.getContent()%></p>
+				<strong><%=HtmlUtils.htmlEscape(comment.getAuthor())%></strong>
+				<p><%=HtmlUtils.htmlEscape(comment.getContent())%></p>
 
 				<small> <%=sdf.format(comment.getCreatedAt())%>
 				</small>
@@ -105,7 +122,7 @@ List<GhostCommentDTO> commentList = (List<GhostCommentDTO>) request.getAttribute
 					<div class="form-group">
 						<textarea name="content" class="form-conrtrol" rows="3" maxlength="1000" 
 							style="width: 100%; resize: vertical;" required>
-							<%=comment.getContent() %>
+							<%=HtmlUtils.htmlEscape(comment.getContent()) %>
 						</textarea>
 					</div>		
 					
@@ -129,6 +146,7 @@ List<GhostCommentDTO> commentList = (List<GhostCommentDTO>) request.getAttribute
 		%>
 		<div style="display: flex; gap: 8px; margin-top: 20px;">
 			<a href="/ghosts" class="btn btn-default">목록으로</a>
+			<a href="/ghosts/<%=ghost.getGhostId() %>/edit" class="btn btn-primary">수정하기</a>
 
 			<form action="/ghosts/<%=ghost.getGhostId()%>/delete" method="POST"
 				onsubmit="return confirm('정말 삭제하시겠습니까?');">

@@ -1,3 +1,4 @@
+<%@page import="org.springframework.web.util.HtmlUtils"%>
 <%@page import="com.study.ghostarchive.common.web.Pager"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.study.ghostarchive.dto.GhostDTO"%>
@@ -40,7 +41,7 @@ Pager pager = (Pager) request.getAttribute("pager");
 
 			<div class="form-group">
 				<input type="text" name="keyword" class="form-control"
-					placeholder="괴담 제목 검색" value="<%=keyword == null ? "" : keyword%>">
+					placeholder="괴담 제목 검색" value="<%=HtmlUtils.htmlEscape(keyword == null ? "" : keyword)%>">
 			</div>
 
 			<button type="submit" class="btn btn-primary">검색</button>
@@ -87,9 +88,9 @@ Pager pager = (Pager) request.getAttribute("pager");
 				<tr>
 
 					<td><%=pager.getNum() -i%></td>	
-					<td><a href="/ghosts/<%=ghost.getGhostId()%>"> <%=ghost.getTitle()%>
+					<td><a href="/ghosts/<%=ghost.getGhostId()%>"> <%=HtmlUtils.htmlEscape(ghost.getTitle())%>
 					</a></td>
-					<td><%=ghost.getAuthor()%></td>
+					<td><%=HtmlUtils.htmlEscape(ghost.getAuthor())%></td>
 					<td><%=sdf.format(ghost.getCreatedAt())%></td>
 					<td><%=ghost.getHit()%></td>
 				</tr>

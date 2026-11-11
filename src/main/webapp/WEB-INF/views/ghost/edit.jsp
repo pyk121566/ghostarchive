@@ -1,3 +1,4 @@
+<%@page import="org.springframework.web.util.HtmlUtils"%>
 <%@page import="com.study.ghostarchive.dto.GhostDTO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
@@ -28,21 +29,21 @@ GhostDTO ghost = (GhostDTO) request.getAttribute("ghost");
 		<!--제목 -->
 		<div class="form-group">
 			<label for="title">제목</label> <input type="text" class="form-control"
-				id="title" name="title" value="<%=ghost.getTitle()%>" required>
+				id="title" name="title" value="<%=HtmlUtils.htmlEscape(ghost.getTitle())%>" required>
 		</div>
 
 		<!-- 작성자-->
 		<div class="form-group">
 			<label for="author">작성자</label> <input type="text"
 				class="form-control" id="author" name="author"
-				value="<%=ghost.getAuthor()%>" required>
+				value="<%=HtmlUtils.htmlEscape(ghost.getAuthor())%>" required>
 		</div>
 
 		<!-- 내용 -->
 		<div class="form-group">
 			<label for="author">괴담 내용</label>
 			<textarea type="text" class="form-control" id="contentr"
-				name="content" rows="10" required><%=ghost.getContent()%></textarea>
+				name="content" rows="10" required><%=HtmlUtils.htmlEscape(ghost.getContent())%></textarea>
 				
 		</div>
 		

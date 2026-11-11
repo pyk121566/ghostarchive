@@ -20,13 +20,15 @@
  <delete id="delete" parameterType="int">
  	DELETE FROM TB_GHOST_COMMENT
  	WHERE COMMENT_ID=#{commentId}
+ 		AND GHOST_ID=#{ghostId}
  </delete>
  
  <!-- 댓글 수정 -->
- <update id="update" parameterType="GhostCommentDTO">
+ <update id="update" >
  	UPDATE TB_GHOST_COMMENT
- 	SET CONTENT=#{content}
- 	WHERE COMMENT_ID=#{commentId}
+ 	SET CONTENT=#{comment.content}
+ 	WHERE COMMENT_ID=#{comment.commentId}
+ 		AND GHOST_ID=#{ghostId}
  </update>
  
 </mapper>

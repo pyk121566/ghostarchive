@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.study.ghostarchive.common.web.Pager;
 import com.study.ghostarchive.dto.GhostCommentDTO;
@@ -175,18 +176,37 @@ public class GhostController {
 		//댓글 등록
 		@PostMapping("/ghosts/{ghostId}/comments")
 		public String registComment(@PathVariable("ghostId") int ghostId, 
-													@ModelAttribute GhostCommentDTO comment) {
+													@ModelAttribute GhostCommentDTO comment,
+												//RedirectAttributes : 리다이렉트 한 다음 페이지에 데이터를 전달할때 사용하는 Spring MVC
+													RedirectAttributes redirectAttributes) {	
 			comment.setGhostId(ghostId);
-			ghostCommentService.regist(comment);
 			
+			try {
+				ghostCommentService.regist(comment);
+				
+				//댓글 등록 성공 메시지
+				redirectAttributes.addFlashAttribute("successMessage","댓글이 등록되었습니다.");
+			
+			}catch(IllegalArgumentException e) {
+				redirectAttributes.addFlashAttribute("errorMessage",e.getMessage());
+			}
+						
 			return "redirect:/ghosts/" + ghostId;
 		}
 		
 		//댓글 삭제
 		@PostMapping("/ghosts/{ghostId}/comments/{commentId}/delete")
 		public String deleteComment(@PathVariable("ghostId") int ghostId,
-												@PathVariable("commentId") int commentId) {
-			ghostCommentService.delete(commentId);
+												@PathVariable("commentId") int commentId,
+												RedirectAttributes redirectAttributes) {
+			
+			int result=ghostCommentService.delete(commentId, ghostId);
+			
+			if(result > 0) {
+				redirectAttributes.addFlashAttribute("successMessage","댓글이 삭제되었습니다.");
+			}else {
+				redirectAttributes.addFlashAttribute("errorMessage","삭제할 댓글이 없습니다.");
+			}
 			
 			return "redirect:/ghosts/"+ghostId;
 		}
@@ -196,15 +216,29 @@ public class GhostController {
 		public String updateComment(
 				@PathVariable("ghostId") int ghostId,
 				@PathVariable("commentId") int commentId,
-				@RequestParam("content") String content) {
+				@RequestParam("content") String content,
+				RedirectAttributes redirectAttributes) {
 			
 			GhostCommentDTO comment = new GhostCommentDTO();
 			
 			comment.setCommentId(commentId);
 			comment.setContent(content);
 			
-			ghostCommentService.update(comment);
+			try {
+				int result = ghostCommentService.update(comment, ghostId);
+				
+				if(result > 0) {
+					redirectAttributes.addFlashAttribute("successMessage", "댓글이 수정되었습니다.");
+				}else {
+					redirectAttributes.addFlashAttribute("errorMessage","수정할 댓글이 없습니다.");
+				}
+				
+				}catch(IllegalArgumentException e){
+					redirectAttributes.addFlashAttribute("errorMessage",e.getMessage());
+				}
+				
+				
 			
 			return "redirect:/ghosts/" + ghostId;
 		}
-	}
+}

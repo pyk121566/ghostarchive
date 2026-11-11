@@ -19,7 +19,7 @@
 			<!--제목 -->
 			<div class="form-group">
 				<label for="title">제목</label>
-				<input type="text" class="form-control" id="title" name="title" required>
+				<input type="text" class="form-control" id="title" name="title" maxlength="200" required>
 			</div>\
 			
 			<!--작성자  -->

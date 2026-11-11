@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.study.ghostarchive.common.web.Pager;
 import com.study.ghostarchive.dto.GhostDTO;
+import com.study.ghostarchive.exception.BusinessException;
+import com.study.ghostarchive.exception.ErrorCode;
 import com.study.ghostarchive.mapper.GhostMapper;
 
 @Service
@@ -30,6 +32,27 @@ public class GhostService {
 	
 	//괴담 등록
 	public int insert(GhostDTO ghost) {
+		
+		//제목 필수 입력 검사
+		if(ghost.getTitle() == null || ghost.getTitle().trim().isEmpty()){
+			throw new BusinessException(ErrorCode.INVALID_INPUT);
+		}
+		
+		//제목 길이 검사
+		if(ghost.getTitle().length() >200) {
+			throw new BusinessException(ErrorCode.INVALID_INPUT);
+		}
+		
+		//괴담 내용 검사
+		if(ghost.getContent()==null|| ghost.getContent().trim().isEmpty()) {
+			throw new BusinessException(ErrorCode.INVALID_INPUT);
+		}
+		
+		//작성자 검사
+		if(ghost.getAuthor()==null|| ghost.getAuthor().trim().isEmpty()) {
+			throw new BusinessException(ErrorCode.INVALID_INPUT);
+		}
+		
 		return ghostMapper.insert(ghost);
 	}
 	

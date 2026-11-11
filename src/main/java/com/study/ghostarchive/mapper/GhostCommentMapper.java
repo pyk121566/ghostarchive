@@ -3,6 +3,7 @@ package com.study.ghostarchive.mapper;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import com.study.ghostarchive.dto.GhostCommentDTO;
 
@@ -16,8 +17,10 @@ public interface GhostCommentMapper {
 	int insert(GhostCommentDTO comment);
 	
 	//댓글 삭제
-	int delete(int commentId);
+	int delete(@Param("commentId") int commentId,
+					@Param("ghostId") int ghostId);
 	
 	//댓글 수정
-	int update(GhostCommentDTO comment);
+	int update(@Param("comment") GhostCommentDTO comment,
+					@Param("ghostId") int ghostId);
 }
