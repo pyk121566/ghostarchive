@@ -16,6 +16,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.study.ghostarchive.common.web.Pager;
 import com.study.ghostarchive.dto.GhostCommentDTO;
 import com.study.ghostarchive.dto.GhostDTO;
+import com.study.ghostarchive.exception.BusinessException;
+import com.study.ghostarchive.exception.ErrorCode;
 import com.study.ghostarchive.service.GhostCommentService;
 import com.study.ghostarchive.service.GhostService;
 

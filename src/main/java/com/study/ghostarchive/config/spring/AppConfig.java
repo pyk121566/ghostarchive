@@ -11,7 +11,9 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @ComponentScan(basePackages = {
 		"com.study.ghostarchive.controller",
 		"com.study.ghostarchive.dao",
-		"com.study.ghostarchive.service"
+		"com.study.ghostarchive.service",
+		"com.study.ghostarchive.exception",
+		"com.study.ghostarchive.rest.controller"
 })	//지정한 패키지에서 Spring이 관리할 컴포넌트를 검색
 public class AppConfig {
 
