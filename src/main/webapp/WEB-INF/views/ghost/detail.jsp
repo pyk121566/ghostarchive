@@ -412,7 +412,7 @@ List<GhostCommentDTO> commentList = (List<GhostCommentDTO>) request.getAttribute
 						method:"POST",
 						headers:{"Content-Type" : "application/json"},
 						body:JSON.stringify({
-							author:author,
+							author: author,
 							content:content
 						})
 					}

@@ -17,7 +17,6 @@ import com.study.ghostarchive.common.web.Pager;
 import com.study.ghostarchive.dto.GhostCommentDTO;
 import com.study.ghostarchive.dto.GhostDTO;
 import com.study.ghostarchive.exception.BusinessException;
-import com.study.ghostarchive.exception.ErrorCode;
 import com.study.ghostarchive.service.GhostCommentService;
 import com.study.ghostarchive.service.GhostService;
 
@@ -189,7 +188,7 @@ public class GhostController {
 				//댓글 등록 성공 메시지
 				redirectAttributes.addFlashAttribute("successMessage","댓글이 등록되었습니다.");
 			
-			}catch(IllegalArgumentException e) {
+			}catch(BusinessException e) {
 				redirectAttributes.addFlashAttribute("errorMessage",e.getMessage());
 			}
 						

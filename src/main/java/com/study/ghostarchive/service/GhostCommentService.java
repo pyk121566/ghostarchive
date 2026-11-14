@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.study.ghostarchive.dto.GhostCommentDTO;
+import com.study.ghostarchive.exception.BusinessException;
+import com.study.ghostarchive.exception.ErrorCode;
 import com.study.ghostarchive.mapper.GhostCommentMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +27,7 @@ public class GhostCommentService {
 		
 		//작성자 검사
 		if(comment.getAuthor() == null || comment.getAuthor().trim().isEmpty()) {
-			throw new IllegalArgumentException("작성자를 입력해 주세요.");
+			throw new BusinessException(ErrorCode.INVALID_INPUT);
 		}
 		
 		// 작성자 길이 검사
