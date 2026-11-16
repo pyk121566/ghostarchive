@@ -14,6 +14,20 @@ const handleResponse = async (response, errorMessage) => {
 	return result;
 };
 
+//댓글 글자 수 표시 및 경고 색상 처리
+const updateCharCount = (input, countElement)=>{
+	
+	const length = input.value.length;
+	
+	countElement.textContent = length +"/1000자";
+	
+	if(length>=900){
+		countElement.style.color="red";
+	}else{
+		countElement.style.color="";
+	}
+};
+
 //댓글 수정 REST API 요청
 const updateComment = async(commentId, newContent) =>{
 	
@@ -94,6 +108,21 @@ const createCommentElement=(comment) =>{
 		editArea.maxLength = 1000;
 		editArea.value = comment.content;
 		
+		//댓글 글자 수 표시
+		const charCount = document.createElement("small");
+		
+		charCount.style.display="block";	//요소가 한 줄의 영역을 차지하도록 설정
+		charCount.style.textAlign="right";	//요소 내부의 글자를 오른쪽으로 정렬
+		
+		//수정창을 처음 열었을 때 글자 수와 색상 설정
+		updateCharCount(editArea, charCount);
+		
+		//댓글 수정 글자 수 실시간 표시
+		editArea.addEventListener("input",()=>{
+			
+			updateCharCount(editArea,charCount);
+		});
+				
 		//수정 완료 버튼 생성
 		const saveBtn = document.createElement("button");
 		saveBtn.type = "button";
@@ -110,7 +139,7 @@ const createCommentElement=(comment) =>{
 	const editBox = document.createElement("div");
 	editBox.style.marginTop = "10px";
 
-	editBox.append(editArea, saveBtn, cancelBtn);
+	editBox.append(editArea, charCount, saveBtn, cancelBtn);
 
 	//기존에 열려 있던 수정 입력창이 있다면 제거
 	const oldEditBox = body.querySelector(".comment-edit-box");
@@ -241,6 +270,35 @@ getCommentList();
 //댓글 등록 폼 가져오기
 const commentForm = document.getElementById("commentForm");
 
+//댓글 등록 버튼 가져오기
+const submitBtn = commentForm.querySelector('button[type="submit"]');
+
+//댓글 등록 입력창 가져오기
+const contentInput = commentForm.querySelector('[name="content"]');
+
+//최대 글자 수 설정
+contentInput.maxLength=1000;
+
+//글자 수 표시 요소 생성
+const registCharCount = document.createElement("small");
+
+registCharCount.textContent=contentInput.value.length+"/1000자";
+
+registCharCount.style.display="block";
+registCharCount.style.textAlign = "right";
+
+//초기 글자 수 와 색상 설정
+updateCharCount(contentInput, registCharCount);
+
+//입력창 아래에 글자 수 표시
+contentInput.insertAdjacentElement("afterend",registCharCount);
+
+//댓글 등록 글자 수 실시간 표시
+contentInput.addEventListener("input",()=>{
+	
+	updateCharCount(contentInput, registCharCount);
+});
+
 //댓글 등록 폼 제출 이벤트
 commentForm.addEventListener("submit", async (event)=> {
 	
@@ -256,6 +314,13 @@ commentForm.addEventListener("submit", async (event)=> {
 		return;
 	}
 	
+	//등록 요청 중 중복 클릭 방지
+	if(submitBtn.disabled){
+		return;
+	}
+	
+	submitBtn.disabled=true;
+	
 	try{
 		// 댓글 등록 REST API 호출
 		await registComment(author, content);
@@ -265,12 +330,17 @@ commentForm.addEventListener("submit", async (event)=> {
 		//입력창 초기화
 		commentForm.reset();
 		
+		//댓글 등록 후 글자 수 초기화
+		updateCharCount(contentInput, registCharCount);
+		
 		//최신 댓글 목록 다시 조회
 		await getCommentList();
 		
 		} catch(error){
 			console.error(error);
 			alert(error.message);
+		}finally{	//정상 처리 되든 오류가 발생하든 마지막에 실행되는 부분
+			submitBtn.disabled=false;
 		}
 		});
 		
