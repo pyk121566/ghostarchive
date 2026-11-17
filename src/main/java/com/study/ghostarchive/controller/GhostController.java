@@ -101,12 +101,6 @@ public class GhostController {
 			//JSP에 전달
 			model.addAttribute("ghost", ghost);
 			
-			// 해당 괴담의 댓글 조회
-			List<GhostCommentDTO> commentList = ghostCommentService.findByGhostId(ghostId);
-			
-			//JSP에 댓글 목록 전달
-			model.addAttribute("commentList",commentList);
-			
 			return "/ghost/detail";
 		}
 			

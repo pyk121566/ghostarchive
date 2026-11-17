@@ -17,9 +17,18 @@ public class GhostCommentService {
 
 	private final GhostCommentMapper ghostCommentMapper;
 	
-	//특정 괴담의 댓글 목록 조회
-	public List<GhostCommentDTO> findByGhostId(int ghostId){
-		return ghostCommentMapper.findByGhostId(ghostId);
+	//특정 괴담의 댓글 목록 조회(페이지네이션)
+	//오버로딩이라 이름이 같아도 됨
+	public List<GhostCommentDTO> findByGhostId(int ghostId, String sort, int page, int size){
+		
+		int offset = (page-1) * size;
+		
+		return ghostCommentMapper.findByGhostIdPage(ghostId, sort, offset, size);
+	}
+	
+	//특정 괴담의 전체 댓글 개수 조회
+	public int countByGhostId(int ghostId) {
+		return ghostCommentMapper.countByGhostId(ghostId);
 	}
 	
 	//댓글 등록
@@ -29,6 +38,17 @@ public class GhostCommentService {
 		if(comment.getAuthor() == null || comment.getAuthor().trim().isEmpty()) {
 			throw new BusinessException(ErrorCode.INVALID_INPUT);
 		}
+		
+		//앞뒤 공백 제거
+		String author = comment.getAuthor().trim();
+		
+		//작성자 길이 검사
+		if(author.length() > 50) {
+			throw new IllegalArgumentException("작성자는 50자 이내로 입력해 주세요.");
+		}
+		
+		//정리된 작성자 이름을 DTO에 반영
+		comment.setAuthor(author);
 		
 		// 작성자 길이 검사
 		if(comment.getAuthor().length() > 50) {

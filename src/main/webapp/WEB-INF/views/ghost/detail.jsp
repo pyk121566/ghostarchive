@@ -81,10 +81,16 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		<%
 		}
 		%>
+		
+		<!-- 댓글 정렬 선택  -->
+		<select id="commentSort">
+			<option value ="latest">최신순</option>
+			<option value="oldest">오래된순</option>
+		</select>
 
 		<!-- 비동기 댓글 목록  -->
 		<div id ="asyncCommentList" data-ghost-id="<%=ghost.getGhostId()%>">
-		
+			<div id ="commenPagination"></div>
 		</div>
 		
 		<div style="display: flex; gap: 8px; margin-top: 20px;">

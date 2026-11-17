@@ -6,6 +6,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.study.ghostarchive.dto.response.ApiResponse;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestControllerAdvice(basePackages="com.study.ghostarchive.rest.controller")
 public class RestGlobalExceptionHandler {
 
@@ -23,4 +26,14 @@ public class RestGlobalExceptionHandler {
 		
 		return ResponseEntity.badRequest().body(ApiResponse.fail(e.getMessage()));
 	}
+	
+	//예상하지 못한 서버 오류 처리
+	@ExceptionHandler(Exception.class)
+	public ResponseEntity<ApiResponse<Void>> handleException(Exception e){
+		
+		log.error("REST API 처리 중 예상치 못한 오류 발생",e);
+		
+		return ResponseEntity.internalServerError().body(ApiResponse.fail("서버 오류가 발생했습니다."));
+	}
+	
 }

@@ -10,10 +10,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.study.ghostarchive.dto.GhostCommentDTO;
 import com.study.ghostarchive.dto.response.ApiResponse;
+import com.study.ghostarchive.dto.response.GhostCommentPageResponse;
 import com.study.ghostarchive.exception.BusinessException;
 import com.study.ghostarchive.exception.ErrorCode;
 import com.study.ghostarchive.service.GhostCommentService;
@@ -26,21 +28,27 @@ public class RestGhostCommentController {
 	
 	private final GhostCommentService ghostCommentService;
 
-	@GetMapping("/api/comments/test")
-	public ResponseEntity<ApiResponse<String>> test(){
-		
-		return ResponseEntity.ok(ApiResponse.success("REST API 연결 성공!"));
-				
-	}
 	
-	//특정 괴담의 댓글 목록 조회
+	//특정 괴담의 댓글 목록 조회 (페이지네이션)
 	@GetMapping("/api/ghosts/{ghostId}/comments")
-	public ResponseEntity<ApiResponse<List<GhostCommentDTO>>> getComments(
-			@PathVariable("ghostId") int ghostId) {
+	public ResponseEntity<ApiResponse<GhostCommentPageResponse>> getComments(
+			@PathVariable("ghostId") int ghostId,@RequestParam(defaultValue = "latest") String sort,
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue="10") int size) {
 		
-		List<GhostCommentDTO> commentList = ghostCommentService.findByGhostId(ghostId);
+		//현재 페이지의 댓글 목록 조회
+		List<GhostCommentDTO> commentList = ghostCommentService.findByGhostId(ghostId, sort, page, size);
 		
-		return ResponseEntity.ok(ApiResponse.success(commentList));
+		//전체 댓글 개수 조회
+		int totalCount = ghostCommentService.countByGhostId(ghostId);
+		
+		//총 페이지 수 계산
+		int totalPages=(int) Math.ceil((double) totalCount/size);
+		
+		//댓글 목록과 페이지 정보를 하나의 DTO로 묶기
+		GhostCommentPageResponse pageResponse = new GhostCommentPageResponse(
+				commentList, totalCount, page, size, totalPages);
+		
+		return ResponseEntity.ok(ApiResponse.success(pageResponse));
 	}
 	
 	//댓글 수정 REST API
