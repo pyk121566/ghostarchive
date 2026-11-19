@@ -85,4 +85,20 @@ public class GhostService {
 	public int increaseHit(int ghostId) {
 		return ghostMapper.increaseHit(ghostId);
 	}
+	
+	//특정 괴담 좋아요 수 1 증가
+	public int increaseLikeCount(int ghostId) {
+		
+		if(ghostId<1) {
+			throw new IllegalArgumentException("올바르지 않은 괴담 번호입니다.");
+		}
+		
+		int result = ghostMapper.increaseLikeCount(ghostId);
+		
+		if(result == 0) {
+			//존재하지 않는 괴담 처리
+			throw new BusinessException(ErrorCode.GHOST_NOT_FOUND);
+		}
+		return result;
+	}
 }

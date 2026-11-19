@@ -5,8 +5,9 @@
   
   <configuration>
   	
+  	<!-- 이 설정으로 Mybatis가 oracle의 언더스코어 컬럼이름을 java의 카멜케이스 필드와 자동으로 연결해줌 -->
   	<settings>
-  		<setting name="mapUnderscoreToCamelCase" value="true"/>
+  		<setting name="mapUnderscoreToCamelCase" value="true"/>	
   	</settings>
   	
   	<typeAliases>

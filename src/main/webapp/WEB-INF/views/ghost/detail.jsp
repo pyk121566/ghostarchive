@@ -54,6 +54,12 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				<td><%=HtmlUtils.htmlEscape(ghost.getContent())%></td>
 			</tr>
 		</table>
+	
+		<!-- 괴담 좋아요 -->
+		<div id="ghostLikeArea">
+			<button type ="button" id="ghostLikeBtn">♡ 좋아요</button>
+			<span id="ghostLikeCount">${ghost.likeCount}</span>
+		</div>
 
 		<!-- 댓글 목록 -->
 		<h3 style="margin-top: 35px; margin-bottom: 20px;">💬 댓글</h3>
@@ -90,8 +96,8 @@ SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		<!-- 비동기 댓글 목록  -->
 		<div id ="asyncCommentList" data-ghost-id="<%=ghost.getGhostId()%>">
-			<div id ="commenPagination"></div>
 		</div>
+			<div id ="commentPagination"></div>
 		
 		<div style="display: flex; gap: 8px; margin-top: 20px;">
 			<a href="/ghosts" class="btn btn-default">목록으로</a> <a

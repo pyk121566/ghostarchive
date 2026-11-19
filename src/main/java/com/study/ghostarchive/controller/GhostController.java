@@ -3,6 +3,7 @@ package com.study.ghostarchive.controller;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -82,7 +83,7 @@ public class GhostController {
 	}
 		//특정 괴담 상세 조회
 		@GetMapping("/ghosts/{ghostId}")
-		public String getGhostDetail(@PathVariable("ghostId") int ghostId, Model model) {
+		public String getGhostDetail(@PathVariable("ghostId") int ghostId, Model model, HttpSession session) {
 			
 			// Service 를 통해 해당 괴담 조회
 			GhostDTO ghost = ghostService.findById(ghostId);

@@ -14,4 +14,5 @@ public class GhostDTO {
 	private String author;
 	private Date createdAt;
 	private int hit;
+	private int likeCount;
 }

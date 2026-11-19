@@ -21,6 +21,11 @@ public class GhostCommentService {
 	//오버로딩이라 이름이 같아도 됨
 	public List<GhostCommentDTO> findByGhostId(int ghostId, String sort, int page, int size){
 		
+		//페이지 번호 및 페이지 크기 검증
+		if (page <1 || size <1 || size>100) {
+			throw new IllegalArgumentException("올바른 페이지 정보를 입력해 주세요.");
+		}
+		
 		int offset = (page-1) * size;
 		
 		return ghostCommentMapper.findByGhostIdPage(ghostId, sort, offset, size);

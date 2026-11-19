@@ -38,4 +38,7 @@ public interface GhostMapper {
 		//괴담 조회수 1증가
 	int increaseHit (int ghostId);
 	
+	//특정 괴담의 좋아요 수 1 증가
+	int increaseLikeCount(int ghostId);	//int는 좋아요 수 가 아니라 sql로 수정된 행의 개수를 의미
+	
 	}

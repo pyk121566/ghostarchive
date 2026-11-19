@@ -291,10 +291,20 @@ const renderCommentPagination = (totalPages)=>{
 	pagination.replaceChildren();
 	
 	for(let page =1; page<= totalPages;  page++){
+		
 		const button = document.createElement("button");
 		
 		button.type="button";
 		button.textContent=page;
+		
+		//현재 페이지 버튼을 클릭하지 못하도록 설정
+		button.disabled=(page===currentPage);
+		
+		//페이지 버튼 클릭 이벤트
+		button.addEventListener("click", async()=>{
+			currentPage=page;
+			await getCommentList();
+		});
 		
 		pagination.appendChild(button);
 	}
@@ -310,6 +320,7 @@ const getCommentList = async () => {
         console.log("이미 댓글 조회 중이므로 중복 요청을 건너뜁니다.");
         return;
     }
+	let shouldReloadPage=false;
     isLoadingComments = true;
 
     console.log("댓글 조회 요청 시작");
@@ -326,7 +337,17 @@ const getCommentList = async () => {
 
         const result = await handleResponse(response, "댓글 조회 실패");
 		const comments = result.data.comments;
-
+		
+		//현재 페이지가 마지막 페이지를 초과했다면 이전 페이지로 이동
+		if (currentPage > result.data.totalPages && currentPage >1) {
+			currentPage = Math.max(1, result.data.totalPages);
+			shouldReloadPage = true;
+			return;
+		}
+		
+		//전체 페이지 수를 이용해 페이지 버튼 생성
+		renderCommentPagination(result.data.totalPages);
+		
         console.log(result);
 
         const commentList = document.getElementById("asyncCommentList");
@@ -383,11 +404,19 @@ const getCommentList = async () => {
 
     } finally {
         isLoadingComments = false;
+		
+		if(shouldReloadPage){
+			await getCommentList();
+		}
     }
 };
 
 sortSelect.addEventListener("change", async () => {
     currentSort = sortSelect.value;
+	
+	//정렬 방식이 변경되면 첫 페이지로 이동
+	currentPage=1;
+	
     await getCommentList();
 });
 
@@ -467,6 +496,9 @@ commentForm.addEventListener("submit", async (event) => {
         //댓글 등록 후 글자 수 초기화
         updateCharCount(contentInput, registCharCount);
 
+		//댓글 등록 후 첫 페이지로 이동
+		currentPage=1;
+		
         //최신 댓글 목록 다시 조회
         await getCommentList();
 
@@ -478,7 +510,35 @@ commentForm.addEventListener("submit", async (event) => {
         submitBtn.disabled = false;
         submitBtn.textContent = originalBtnlText;
     }
-});
+	
+	});
+	
+	// 좋아요 버튼
+	const ghostLikeBtn = document.getElementById("ghostLikeBtn");
+	const ghostLikeCount = document.getElementById("ghostLikeCount");
+	
+	ghostLikeBtn.addEventListener("click", async () => {
+
+	    ghostLikeBtn.disabled = true;
+
+	    try {
+	        const response = await fetch(`/api/ghosts/${ghostId}/likes`, {
+	            method: "POST"
+	        });
+
+	        await handleResponse(response);
+
+			//화면에 표시된 좋아요 수만 1 증가
+			const currentCount = Number(ghostLikeCount.textContent);
+			
+			ghostLikeCount.textContent = currentCount +1;
+			ghostLikeBtn.disabled_false;
+
+	    } catch (error) {
+	        alert(error.message);
+	        ghostLikeBtn.disabled = false;
+	    }
+	});
 
 
 
